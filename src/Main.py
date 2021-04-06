@@ -1,12 +1,13 @@
 # import Calculation
 # from __main__ import *
 from math import radians, cos, sin, asin, sqrt
-
+import os
 
 def readFile(nama_file) : 
     simpul = []
     matrix = []
-    with open(nama_file) as f:
+    filepath = os.path.join('..\\test', nama_file)
+    with open(filepath) as f:
         lines = f.readlines()
 
     lineNumber = 0
@@ -159,6 +160,7 @@ kasusUji = input("Masukkan nama file kasus uji: ")
 # Mengolah input kasus uji
 simpul, matrix, nodeCount = readFile(kasusUji)
 # Mencetak semua simpul yang ada
+print("List simpul: ")
 no = 1
 for node in simpul :
     print(no, end="")
@@ -173,8 +175,9 @@ startNode = int(input("No simpul asal: "))
 goalNode = int(input("No simpul tujuan: "))
 
 distance, shortestPath = aStar2(simpul[startNode - 1][2], simpul[goalNode - 1][2])
+print("Jarak lintasan terpendek antara " + simpul[startNode - 1][2] + " dan " + simpul[goalNode - 1][2]
+        + " adalah " + str(distance) + " km")
 print(shortestPath)
-print(distance)
 
 
 
