@@ -2,6 +2,7 @@
 # from __main__ import *
 from math import radians, cos, sin, asin, sqrt
 
+
 def readFile(nama_file) : 
     simpul = []
     matrix = []
@@ -67,7 +68,7 @@ def aStar (start, goal) :
     shortestPath.append(start)
     currNode = start
     dFromStart = 0
-    while (currNode != goal and walkCount < nodeCount) :
+    while (currNode != goal) :
         min = None
         minPos = None
         isFirst = True
@@ -85,6 +86,55 @@ def aStar (start, goal) :
         dFromStart = gn(dFromStart, currNode, simpul[minPos][2]) 
         currNode = simpul[minPos][2]
     return dFromStart, shortestPath
+
+def aStar2(start, goal) : 
+    stack = []
+    visitedNodes = []
+    currNode = start
+    stack.append(start)
+    dFromStart = 0
+    found = False
+    while(len(stack) > 0 and found == False) : 
+        min = None
+        minPos = None
+        isFirst = True
+        i = 0
+        neighbor = False
+        
+        while(i < nodeCount and neighbor == False) :
+            if ((matrix[searchPos(currNode)][i] != 0) and (simpul[i][2] not in visitedNodes)) :
+                if isFirst :
+                    isFirst = False
+                    minPos = i
+                    min = evalFunc(dFromStart, currNode, simpul[i][2], goal)
+                else :
+                    if (min > evalFunc(dFromStart, currNode, simpul[i][2], goal)) :
+                        minPos = i
+                        min = evalFunc(dFromStart, currNode, simpul[i][2], goal)
+                neighbor = True
+            i+=1
+        if (neighbor == False) :
+            if (currNode not in visitedNodes) :
+                visitedNodes.append(currNode)
+            temp = stack.pop()
+            if (len(stack) > 0) :
+                dFromStart -= haversine(searchPos(temp), searchPos(stack[len(stack) - 1]))
+                currNode = stack[len(stack) - 1]
+        else : 
+            stack.append(simpul[minPos][2])
+   
+            if (currNode not in visitedNodes) :
+                visitedNodes.append(currNode)
+        
+            dFromStart = gn(dFromStart, currNode, simpul[minPos][2]) 
+            currNode = simpul[minPos][2]
+        if (currNode == goal) : 
+            found = True
+    if (len(stack) == 0) : 
+        dFromStart = 0
+    return dFromStart, stack
+
+
 
 # Menghitung fungsi evaluasi dengan rumus f(n) = g(n) + h(n)
 def evalFunc (dFromStart, currNode, exploreNode, goal) :
@@ -122,8 +172,9 @@ changeMatrix()
 startNode = int(input("No simpul asal: "))
 goalNode = int(input("No simpul tujuan: "))
 
-distance, shortestPath = aStar(simpul[startNode - 1][2], simpul[goalNode - 1][2])
+distance, shortestPath = aStar2(simpul[startNode - 1][2], simpul[goalNode - 1][2])
 print(shortestPath)
+print(distance)
 
 
 
