@@ -1,1 +1,0 @@
-# Tucil-III-Stima
